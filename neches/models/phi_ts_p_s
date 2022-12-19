@@ -1,0 +1,41 @@
+model {
+
+# Priors and constraints
+  for (i in 1:n_ind){
+	  for (t in f[i]:(n_periods - 1)){
+			logit(phi[i, t]) <- lphi[t, species[i]]
+			logit(p[i, t]) <- lp[species[i]]
+			} #t
+	} #i
+	
+	for(t in 1:(n_periods - 1)){
+	  for(s in 1:n_species){
+	    lphi[t, s] ~ dnorm(mean_phi, tau_phi)
+	  } 
+	}
+	
+	for(s in 1:n_species){
+    lp[s] ~ dnorm(mean_p, tau_p)
+	}
+
+  mean_phi ~ dnorm(0, 1) # Prior for mean survival
+  mean_p ~ dnorm(0, 1)   # Prior for mean recapture
+  sigma_p ~ dunif(0, 10) # Prior for variance of p
+  tau_p <- 1/pow(sigma_p, 2)
+  sigma_phi ~ dunif(0, 10) # Prior for variance of phi
+  tau_phi <- 1/pow(sigma_phi, 2)
+
+# Likelihood 
+  for (i in 1:n_ind){
+	  # Define latent state at first capture
+	  z[i, f[i]] <- 1
+	  for (t in (f[i] + 1):n_periods){
+			# State process
+			z[i,t] ~ dbern(mu1[i, t])
+			mu1[i, t] <- phi[i, t - 1] * z[i, t - 1]
+			# Observation process
+			y[i, t] ~ dbern(mu2[i,t])
+			mu2[i, t] <- p[i, t - 1] * z[i, t]
+		} #t
+	} #i
+}

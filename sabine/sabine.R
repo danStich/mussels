@@ -36,7 +36,7 @@ mussels <- merge(mussels, ind_spp, by = "individual")
 
 melted <- melt(mussels, id = c("individual", "site", "year"))
 
-caps <- reshape::cast(mussels, formula = individual ~ year ~ site)
+caps <- reshape::cast(mussels, formula = individual ~ year)
 
 y_mat <- as.matrix(caps[ , 2:4]) 
 y_mat[y_mat > 0] <- 1
