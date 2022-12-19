@@ -5,7 +5,7 @@ library(reshape)
 library(lubridate)
 
 # Data read ----
-neches <- read.csv("data/neches.csv", stringsAsFactors = FALSE)
+neches <- read.csv("neches/data/neches.csv", stringsAsFactors = FALSE)
 
 # Have a look
 glimpse(neches)
@@ -84,12 +84,12 @@ inits <- function(){
 phi_dot_p_dot <- jags(data = jags.data, 
                 inits = inits,
                 parameters.to.save = c("mean_phi", "mean_p"),
-                model.file = "models/phi_dot_p_dot"
+                model.file = "neches/models/phi_dot_p_dot"
                 )
 
 print(phi_dot_p_dot)
 
-save(phi_dot_p_dot, file = "results/phi_dot_p_dot.rda")
+save(phi_dot_p_dot, file = "neches/results/phi_dot_p_dot.rda")
 
 # Phi.Pt Model ----
 # . Package the data ----
@@ -138,12 +138,12 @@ inits <- function(){
 phi_dot_p_t <- jags(data = jags.data, 
                       inits = inits,
                       parameters.to.save = c("mean_phi", "mean_p", "lp"),
-                      model.file = "models/phi_dot_p_t"
+                      model.file = "neches/models/phi_dot_p_t"
 )
 
 print(phi_dot_p_t)
 
-save(phi_dot_p_t, file = "results/phi_dot_p_t.rda")
+save(phi_dot_p_t, file = "neches/results/phi_dot_p_t.rda")
 
 
 # Phi.Ps Model ----
@@ -195,12 +195,12 @@ inits <- function(){
 phi_dot_p_s <- jags(data = jags.data, 
                     inits = inits,
                     parameters.to.save = c("mean_phi", "mean_p", "lp"),
-                    model.file = "models/phi_dot_p_s"
+                    model.file = "neches/models/phi_dot_p_s"
 )
 
 print(phi_dot_p_s)
 
-save(phi_dot_p_s, file = "results/phi_dot_p_s.rda")
+save(phi_dot_p_s, file = "neches/results/phi_dot_p_s.rda")
 
 # Phi.Pts Model ----
 # . Package the data ----
@@ -251,9 +251,9 @@ inits <- function(){
 phi_dot_p_ts <- jags(data = jags.data, 
                     inits = inits,
                     parameters.to.save = c("mean_phi", "mean_p", "lp"),
-                    model.file = "models/phi_dot_p_ts"
+                    model.file = "neches/models/phi_dot_p_ts"
 )
 
 print(phi_dot_p_ts)
 
-save(phi_dot_p_ts, file = "results/phi_dot_p_ts.rda")
+save(phi_dot_p_ts, file = "neches/results/phi_dot_p_ts.rda")
