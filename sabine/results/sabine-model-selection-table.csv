@@ -1,0 +1,15 @@
+Model set,Model,DIC,DeltaDIC
+Detection,Phi.ps,7108,0
+,Phi.p.,7504,396
+,Phi.pj,7885,777
+,Phi.ptj,7992,884
+,Phi.pt,8182,1074
+,Phi.ptsj,8856,1748
+,Phi.pts,10186,3078
+Survival,Phi_ts_p_s,7248,0
+,Phi_tsj_p_s,7371,123
+,Phi_s_p_s,7373,125
+,Phi_js_p_s,7517,269
+,Phi_j_p_s,8277,1029
+,Phi_tj_p_s,8849,1601
+,Phi_t_p_s,9114,1867
