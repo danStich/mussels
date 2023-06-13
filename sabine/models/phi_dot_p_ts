@@ -1,11 +1,11 @@
 model {
 
 # Priors and constraints
-  for (i in 1:n_ind){
-	  for (t in f[i]:(n_periods - 1)){
+  for(i in 1:n_ind){
+	  for(t in f[i]:(n_periods - 1)){
 			logit(phi[i, t]) <- mean_phi
 			logit(p[i, t]) <- lp[t, species[i]]
-			} #t
+		} #t
 	} #i
 	
 	for(t in 1:n_periods){
@@ -20,12 +20,12 @@ model {
   tau_p <- 1/pow(sigma_p, 2)
 
 # Likelihood 
-  for (i in 1:n_ind){
+  for(i in 1:n_ind){
 	  # Define latent state at first capture
 	  z[i, f[i]] <- 1
 	  for (t in (f[i] + 1):n_periods){
 			# State process
-			z[i,t] ~ dbern(mu1[i, t])
+			z[i, t] ~ dbern(mu1[i, t])
 			mu1[i, t] <- phi[i, t - 1] * z[i, t - 1]
 			# Observation process
 			y[i, t] ~ dbern(mu2[i,t])

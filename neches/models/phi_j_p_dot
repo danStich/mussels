@@ -3,19 +3,14 @@ model {
 # Priors and constraints
   for (i in 1:n_ind){
 	  for (t in f[i]:(n_periods - 1)){
-			logit(phi[i, t]) <- lphi[t]
-			logit(p[i, t]) <- lp[species[i]]
-			} #t
+			logit(phi[i, t]) <- lphi[site[i]]
+			logit(p[i, t]) <- mean_p
+		} #t
 	} #i
 	
-	for(t in 1:(n_periods - 1)){
-	  lphi[t] ~ dnorm(mean_phi, tau_phi)
-	}
-	
-	
-	for(s in 1:n_species){
-    lp[s] ~ dnorm(mean_p, tau_p)
-	}
+  for(j in 1:n_site){
+    lphi[j] ~ dnorm(mean_phi, tau_phi)
+  } 
 
   mean_phi ~ dnorm(0, 1) # Prior for mean survival
   mean_p ~ dnorm(0, 1)   # Prior for mean recapture
@@ -30,7 +25,7 @@ model {
 	  z[i, f[i]] <- 1
 	  for (t in (f[i] + 1):n_periods){
 			# State process
-			z[i,t] ~ dbern(mu1[i, t])
+			z[i, t] ~ dbern(mu1[i, t])
 			mu1[i, t] <- phi[i, t - 1] * z[i, t - 1]
 			# Observation process
 			y[i, t] ~ dbern(mu2[i,t])

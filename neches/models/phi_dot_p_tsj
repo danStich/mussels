@@ -4,12 +4,22 @@ model {
   for(i in 1:n_ind){
 	  for(t in f[i]:(n_periods - 1)){
 			logit(phi[i, t]) <- mean_phi
-			logit(p[i, t]) <- mean_p
+			logit(p[i, t]) <- lp[t, site[i], species[i]]
 		} #t
 	} #i
 	
+	for(t in 1:n_periods){
+  	for(s in 1:n_site){
+  	  for(j in 1:n_species){
+        lp[t, s, j] ~ dnorm(mean_p, tau_p)
+      }
+  	}
+	}
+	
   mean_phi ~ dnorm(0, 1) # Prior for mean survival
   mean_p ~ dnorm(0, 1)   # Prior for mean recapture
+  sigma_p ~ dunif(0, 10) # Prior for variance of p
+  tau_p <- 1/pow(sigma_p, 2)
 
 # Likelihood 
   for(i in 1:n_ind){
@@ -20,7 +30,7 @@ model {
 			z[i, t] ~ dbern(mu1[i, t])
 			mu1[i, t] <- phi[i, t - 1] * z[i, t - 1]
 			# Observation process
-			y[i, t] ~ dbern(mu2[i, t])
+			y[i, t] ~ dbern(mu2[i,t])
 			mu2[i, t] <- p[i, t - 1] * z[i, t]
 		} #t
 	} #i
