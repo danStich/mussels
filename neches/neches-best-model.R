@@ -133,11 +133,14 @@ inits <- function(){
 
 
 # Results----
+# . Load result ----
 load("neches/results/phi_tsj_p_dot_50k.rda")
+
 # . Phi_tsj_p_dot ----
 # .. Survival ----
 names(phi_tsj_p_dot$BUGSoutput$sims.list)
 
+# ... Estimates ----
 # Get logit-scale survival estimates
 lphi <-  phi_tsj_p_dot$BUGSoutput$sims.list$lphi
 lphi <- melt(lphi)
@@ -181,8 +184,30 @@ phi_mean <- phi %>%
 median(phi$fit)
 quantile(phi$fit, c(0.025, 0.975))
 
-# . Survival plot ----
-ggplot(phi, aes(x = fit, y = common)) +
+# ... Plot ----
+# Create an index to determine whether to plot the 
+# point estimates and quantiles for species that were not detected
+# at a given site
+# Do the same thing for the full posteriors
+include_df <- neches_species_table %>% 
+  pivot_longer(cols = c(`Lower Neches`, Rockland), names_to = "site") %>% 
+  mutate(value = ifelse(is.na(value), 0, 1)) %>% 
+  data.frame()
+
+# Drop rows from estimates with zero mussels in a site, since these
+# are just the means from the other site
+phi_ests <- phi_ests[phi_ests$fit * include_df$value > 0, ]
+
+phi2 <- phi
+phi3 <- merge(phi2, include_df, by = c("binomial", "site")) %>% 
+  filter(value > 0) %>% 
+  select(-common.y) %>% 
+  dplyr::rename(common = common.x)
+
+
+# Plot the full posteriors as a density ridge overlayed by
+# point estimates and quantiles
+ggplot(phi3, aes(x = fit, y = common)) +
   ggridges:::geom_density_ridges(scale = 1, size = 0.3, alpha = 0.20, 
                                  color = NA) +
   geom_point(data = phi_ests, position = position_nudge(y = 0.1), size = 2) +
@@ -201,7 +226,8 @@ ggplot(phi, aes(x = fit, y = common)) +
   theme_light() +
   facet_wrap(~site)
 
-# . Detection probability ----
+# .. Detection probability ----
+# ... Estimates ----
 # Get logit-scale survival estimates
 lp <-  phi_tsj_p_dot$BUGSoutput$sims.list$lp
 p <- melt(lp)
@@ -223,7 +249,7 @@ p_ests <- p %>%
             q1 = quantile(estimate, 0.25),
             q2 = quantile(estimate, 0.75))
 
-# .. Detection plot ----
+# ... Plot ----
 ggplot(p, aes(x = fit, y = 1)) +
   ggridges:::geom_density_ridges(scale = 1, size = 0.3, alpha = 0.20, 
                                  color = NA) +
