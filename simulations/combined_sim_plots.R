@@ -16,7 +16,7 @@ plri_plotter <- res %>%
     precision_lwr = quantile(obs_phi_sd, 0.025),
     precision_upr = quantile(obs_phi_sd, 0.975),  
     mse = (sum(obs_phi - phi)^2)/n()) %>% 
-  mutate(Species = "Pleurobema riddellii")
+  mutate(Species = "Louisiana Pigtoe")
 
 
 # Load results ----
@@ -34,7 +34,7 @@ poam_plotter <- res %>%
     precision_lwr = quantile(obs_phi_sd, 0.025),
     precision_upr = quantile(obs_phi_sd, 0.975),  
     mse = (sum(obs_phi - phi)^2)/n()) %>% 
-  mutate(Species = "Potamilus amphichaenus")
+  mutate(Species = "Texas Heelsplitter")
 
 plotter <- rbind(plri_plotter, poam_plotter)
 
