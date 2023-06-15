@@ -150,11 +150,10 @@ phi$estimate <- boot::inv.logit(phi$estimate)
 phi$fit <- phi$estimate
 
 
-# Change species to factor
-phi$common <- levels(factor(covs$common))[phi$species]
-phi$binomial <- levels(factor(covs$binomial))[phi$species]
-
-phi$site <- levels(factor(covs$site))[phi$site]
+# Add categorical values back in based on numerical indices
+phi$common <- unique(covs$common)[phi$species]
+phi$binomial <- unique(covs$binomial)[phi$species]
+phi$site <- unique(covs$site)[phi$site]
 
 
 # Calculate descriptive stats for each species
@@ -170,8 +169,8 @@ phi_ests <- phi %>%
   mutate(parameter = "phi")
 
 # Write the descriptive statistics to a table
-write.table(phi_ests, "neches/results/phi_ests.csv",
-            row.names = FALSE, quote = FALSE, sep = ",")
+# write.table(phi_ests, "neches/results/phi_ests.csv",
+#             row.names = FALSE, quote = FALSE, sep = ",")
 
 # Calculate the overall mean and descriptive statistics
 phi_mean <- phi %>% 

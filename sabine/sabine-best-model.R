@@ -144,8 +144,8 @@ phi$estimate <- boot::inv.logit(phi$estimate)
 phi$fit <-phi$estimate
 
 # Change species to factor
-phi$common <- levels(factor(covs$common))[phi$species]
-phi$binomial <- levels(factor(covs$binomial))[phi$species]
+phi$common <- unique(covs$common)[phi$species]
+phi$binomial <- unique(covs$binomial)[phi$species]
 
 # Calculate descriptive stats for each species
 phi_ests <- phi %>% 
@@ -198,8 +198,8 @@ names(p) <- c("iteration", "species", "estimate")
 p$fit <- p$estimate
 
 # Change species to factor
-p$binomial <- levels(factor(covs$binomial))[p$species]
-p$common <- levels(factor(covs$common))[p$species]
+p$binomial <- unique(covs$binomial)[p$species]
+p$common <- unique(covs$common)[p$species]
 
 # Calculate descriptive stats for each species
 p_ests <- p %>% 
