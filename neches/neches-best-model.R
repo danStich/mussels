@@ -122,7 +122,7 @@ inits <- function(){
 # .. Fit the model ----
 # phi_tsj_p_dot <- jags(data = jags.data, 
 #                      inits = inits,
-#                      parameters.to.save = c("mean_phi", "mean_p", "lphi", "lp"),
+#                      parameters.to.save = c("mean_phi", "mean_p", "lphi"),
 #                      model.file = "neches/models/phi_tsj_p_dot",
 #                      n.iter = n_iter,
 #                      n.burnin = n_burnin,
@@ -228,17 +228,9 @@ ggplot(phi3, aes(x = fit, y = common)) +
 # .. Detection probability ----
 # ... Estimates ----
 # Get logit-scale survival estimates
-lp <-  phi_tsj_p_dot$BUGSoutput$sims.list$lp
-p <- melt(lp)
-names(p) <- c("iteration", "time", "site", "species", "estimate")
-p$estimate <- boot::inv.logit(p$estimate)
+p <-  data.frame(phi_tsj_p_dot$BUGSoutput$sims.list$mean_p)
+names(p) <- c("estimate")
 p$fit <- p$estimate
-
-# Change species to factor
-p$common <- levels(factor(covs$common))[p$species]
-p$binomial <- levels(factor(covs$binomial))[p$species]
-
-p$site <- levels(factor(covs$site))[p$site]
 
 # Calculate the overall mean and descriptive statistics
 p_ests <- p %>% 
@@ -252,16 +244,16 @@ p_ests <- p %>%
 ggplot(p, aes(x = fit, y = 1)) +
   ggridges:::geom_density_ridges(scale = 1, size = 0.3, alpha = 0.20, 
                                  color = NA) +
-  geom_point(data = p_ests, position = position_nudge(y = 1.5), size = 4) +
+  geom_point(data = p_ests, position = position_nudge(y = .05), size = 4) +
   geom_linerange(data = p_ests, 
                  aes(xmin = lwr, xmax = upr),
-                 position = position_nudge(y = 1.5),
+                 position = position_nudge(y = .05),
                  linewidth = 1) +
   geom_linerange(data = p_ests, 
                  aes(xmin = q1, xmax = q2),
-                 position = position_nudge(y = 1.5),
+                 position = position_nudge(y = .05),
                  linewidth = 2) +
-  scale_y_continuous(expand = c(0, 1)) +
+  # scale_y_continuous(expand = c(0, 1)) +
   ylab("Density") +
   xlab("Detection probability (p)") + 
   theme_light()
